@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>西蒙斯真粉认证 · 脑科学学习群入群测试</title>
+<style>
+  :root{
+    --bg:#0f1b2d; --card:#ffffff; --ink:#1a2b45; --sub:#6b7a90;
+    --brand:#2b6cff; --brand2:#15b8a6; --soft:#eef3ff;
+    --ok:#15b8a6; --warn:#ff7a59; --line:#e6ebf3;
+    --shadow:0 8px 30px rgba(20,40,80,.08);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(160deg,#0f1b2d 0%,#16294a 100%);
+    color:var(--ink); min-height:100vh; line-height:1.6;
+  }
+  .wrap{max-width:480px;margin:0 auto;padding:0 0 40px;}
+
+  /* 顶部进度 */
+  .topbar{position:sticky;top:0;z-index:10;background:rgba(15,27,45,.92);backdrop-filter:blur(8px);padding:14px 18px 10px;}
+  .topbar .brand{color:#fff;font-size:13px;opacity:.85;letter-spacing:.5px}
+  .topbar .brand b{color:#7db0ff}
+  .progress{height:6px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:8px;overflow:hidden}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2b6cff,#15b8a6);border-radius:99px;transition:width .35s ease}
+
+  .screen{display:none;padding:20px 18px}
+  .screen.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* 封面 */
+  .cover{text-align:center;color:#fff;padding:50px 22px 30px}
+  .cover .badge{display:inline-block;font-size:12px;padding:6px 14px;border:1px solid rgba(125,176,255,.5);border-radius:99px;color:#9ec2ff;margin-bottom:22px}
+  .cover h1{font-size:27px;margin:0 0 12px;line-height:1.35;font-weight:800}
+  .cover h1 span{background:linear-gradient(90deg,#7db0ff,#5dffd6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cover p{color:#b8c6dd;font-size:14.5px;margin:0 auto 26px;max-width:330px}
+  .cover .who{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:34px}
+  .cover .who i{font-style:normal;font-size:12px;padding:6px 11px;background:rgba(255,255,255,.08);border-radius:8px;color:#cdd9ee}
+
+  /* 卡片 */
+  .card{background:var(--card);border-radius:20px;padding:24px 20px;box-shadow:var(--shadow)}
+  .q-idx{font-size:12px;color:var(--brand);font-weight:700;letter-spacing:1px;margin-bottom:6px}
+  .q-tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:6px;margin-bottom:12px}
+  .q-tag.know{background:#eef3ff;color:var(--brand)}
+  .q-tag.psych{background:#e8fbf6;color:var(--brand2)}
+  .q-tag.covert{background:#f3ecff;color:#7a52d6}
+  .q-text{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 20px}
+  .q-hint{font-size:12.5px;color:var(--sub);margin:-12px 0 18px}
+
+  .opts{display:flex;flex-direction:column;gap:11px}
+  .opt{
+    display:flex;align-items:flex-start;gap:12px;padding:15px 15px;border:1.5px solid var(--line);
+    border-radius:14px;background:#fff;cursor:pointer;transition:all .18s;font-size:15px;color:var(--ink)
+  }
+  .opt:active{transform:scale(.99)}
+  .opt:hover{border-color:#c5d4f5}
+  .opt .box{flex:0 0 auto;width:22px;height:22px;border:2px solid #cdd6e6;border-radius:7px;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+  .opt.sel{border-color:var(--brand);background:var(--soft)}
+  .opt.sel .box{background:var(--brand);border-color:var(--brand)}
+  .opt.sel .box::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+  .opt.radio .box{border-radius:50%}
+  .opt.radio.sel .box::after{width:10px;height:10px;border-radius:50%;background:#fff;border:none;transform:none}
+  .opt .txt{flex:1}
+
+  .nav{display:flex;gap:10px;margin-top:22px}
+  .btn{flex:1;padding:15px;border:none;border-radius:13px;font-size:15.5px;font-weight:700;cursor:pointer;transition:all .18s}
+  .btn:active{transform:scale(.98)}
+  .btn-ghost{background:#f0f3f8;color:var(--sub)}
+  .btn-main{background:linear-gradient(90deg,var(--brand),#3d7bff);color:#fff;box-shadow:0 6px 18px rgba(43,108,255,.35)}
+  .btn-main:disabled{background:#c9d4ea;box-shadow:none;color:#fff;cursor:not-allowed}
+  .btn-block{width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#2b6cff,#15b8a6);color:#fff;box-shadow:0 8px 24px rgba(43,108,255,.4)}
+
+  /* 结果页 */
+  .result{color:#fff;text-align:center;padding:8px 0 0}
+  .result .emoji{font-size:60px;margin-bottom:6px}
+  .result h2{font-size:25px;margin:6px 0 8px;font-weight:800}
+  .result .sub{color:#b8c6dd;font-size:14.5px;margin-bottom:26px}
+  .result .panel{background:var(--card);border-radius:20px;padding:26px 22px;text-align:left;color:var(--ink);box-shadow:var(--shadow);margin-bottom:18px}
+  .result .panel h3{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .scoreline{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--sub);margin-bottom:6px}
+  .bar{height:8px;background:#eef1f6;border-radius:99px;overflow:hidden;margin-bottom:14px}
+  .bar > i{display:block;height:100%;border-radius:99px}
+  .verdict{padding:14px 15px;border-radius:13px;font-size:14px;margin-top:6px;line-height:1.7}
+  .verdict.pass{background:#e8fbf6;color:#0a8a7a;border-left:4px solid var(--ok)}
+  .verdict.fail{background:#fff4f0;color:#c44a2a;border-left:4px solid var(--warn)}
+
+  .qr-area{text-align:center;padding:8px 0 4px}
+  .qr-area .qr{width:min(280px,100%);max-width:100%;margin:0 auto 14px;background:#f0f3f8;border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:13px;border:2px dashed #c5d0e0;overflow:hidden}
+  .qr-area .qr img{width:100%;height:auto;display:block;object-fit:contain}
+  .qr-tip{font-size:12.5px;color:var(--sub);margin-top:6px;line-height:1.7}
+
+  .copycode{display:flex;gap:8px;margin-top:14px;align-items:stretch}
+  .copycode input{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:12px;font-size:13px;color:var(--ink);background:#fff}
+  .copycode button{flex:0 0 auto;padding:0 18px;border:none;border-radius:11px;background:var(--ink);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+
+  .foot{text-align:center;color:#7d8ca6;font-size:11.5px;margin-top:26px;line-height:1.8;padding:0 10px}
+
+  .tip-banner{background:rgba(255,255,255,.06);border-radius:12px;padding:13px 15px;color:#cdd9ee;font-size:12.5px;margin:0 4px 18px;line-height:1.7}
+  .tip-banner b{color:#7db0ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 顶部进度条 -->
+  <div class="topbar">
+    <div class="brand">🧠 <b>疯狂的西蒙斯</b> · 找到同频的你</div>
+    <div class="progress"><i id="bar"></i></div>
+  </div>
+
+  <!-- ============ 封面 ============ -->
+  <div class="screen active" id="screen-cover">
+    <div class="cover">
+      <span class="badge">✦ 脑科学成长群 · 找到同频的你</span>
+      <h1>想用脑科学<br><span>一起变成更好的自己吗？</span></h1>
+      <p>一直想找一群<b style="color:#7db0ff">同频的人</b>，一起用脑科学把日子过得更通透。在邀请你进群前，先来个 4 分钟的小互动吧～20 道轻松的小题，当作我们认识彼此的第一步，期待在群里遇见你。</p>
+      <div class="who">
+        <i>📚 学习型真粉</i><i>✨ 颜值欣赏</i><i>💕 情感投射</i><i>🔍 隐私好奇</i>
+      </div>
+      <button class="btn-block" onclick="startQuiz()">开始测试 →</button>
+      <div class="foot">共 20 题 · 约 4 分钟 · 答完即出结果</div>
+    </div>
+  </div>
+
+  <!-- ============ 答题区（动态生成） ============ -->
+  <div class="screen" id="screen-quiz">
+    <div id="qContainer"></div>
+    <div class="nav">
+      <button class="btn btn-ghost" id="prevBtn" onclick="prevQ()">上一题</button>
+      <button class="btn btn-main" id="nextBtn" onclick="nextQ()" disabled>下一题</button>
+    </div>
+  </div>
+
+  <!-- ============ 结果区 ============ -->
+  <div class="screen" id="screen-result">
+    <div class="result" id="resultBox"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   ⭐ 题目数据 —— 博主可直接修改这一块 ⭐
+   分两类：
+   A. knowledge（暗题）：有标准答案，验证"是否真看过视频"
+   B. psych（心理题）：无对错，按 type 统计粉丝类型
+   类型 type 取值：
+     study   = 学习型真粉
+     face    = 颜值粉
+     lover   = 女友粉
+     stalker = 私生粉
+   ============================================================ */
+
+const QUIZ = {
+
+  // —— A区：真粉验证题（暗题，共12题）—— 基于博主真实视频内容，答对才得分
+  // 每题权重 w（单选7分 / 多选16分）
+  knowledge: [
+    {
+      multi: false, w: 7,
+      q: "西蒙斯目前的真实身份是？",
+      opts: [
+        { t: "临床医学本硕、脑神经外科MD，在荷兰读神经科学PhD", ok: true },
+        { t: "健身博主，副业讲讲大脑",                         ok: false },
+        { t: "情感导师，专讲恋爱心理",                         ok: false },
+        { t: "美妆穿搭博主",                                   ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他的那句经典口号/定位是？",
+      opts: [
+        { t: "带你用脑科学黑科技，硬核进化",   ok: true  },
+        { t: "每天一个变美小技巧",             ok: false },
+        { t: "教你三天脱单秘籍",               ok: false },
+        { t: "星座运势每日更新",               ok: false },
+      ]
+    },
+    {
+      multi: true, w: 16,
+      q: "下面这些视频主题，哪些是西蒙斯【真的讲过】的？",
+      hint: "多选 · 全部选对才得分",
+      opts: [
+        { t: "用第二人格帮你快速进入状态",     ok: true  },
+        { t: "只需7天，重启多巴胺系统",        ok: true  },
+        { t: "4个脑科学方法，拯救前额叶",      ok: true  },
+        { t: "海马体睡前记忆法",               ok: true  },
+        { t: "用星盘提升考试运势",             ok: false },
+        { t: "MBTI人格深度解析",               ok: false },
+        { t: "7天练出马甲线",                  ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他讲「为什么玩游戏不困、做作业就困」时，核心原因是？",
+      opts: [
+        { t: "重复单调的作业让多巴胺分泌骤降，触发大脑的睡眠机制", ok: true },
+        { t: "玩游戏时间过得快，所以不觉得困",                     ok: false },
+        { t: "作业太简单，大脑觉得无聊",                           ok: false },
+        { t: "玩游戏能补充体力",                                   ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "关于「临时抱佛脚」，他的脑科学观点是？",
+      opts: [
+        { t: "应付紧急考试时，突击复习可能比提前一个月更有用", ok: true },
+        { t: "完全没用，必须提前复习",                         ok: false },
+        { t: "只有天才才能临时抱佛脚",                         ok: false },
+        { t: "临时抱佛脚会损伤大脑",                           ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他讲「海马体睡前记忆法」时，建议睡前怎么做？",
+      opts: [
+        { t: "睡前90分钟内学习，让海马体在睡眠中巩固记忆", ok: true },
+        { t: "睡前疯狂刷短视频放松大脑",                   ok: false },
+        { t: "睡前必须高强度运动",                         ok: false },
+        { t: "睡前背诵会失眠，不建议学",                   ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他怎么解释「人为什么会做梦」？",
+      opts: [
+        { t: "做梦是大脑清洗情绪、整理过载记忆的过程", ok: true },
+        { t: "做梦是睡眠质量差的表现",                 ok: false },
+        { t: "做梦说明大脑在休息",                     ok: false },
+        { t: "做梦完全是没意义的随机信号",             ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "关于「走路/走动」和记忆，他的观点是？",
+      opts: [
+        { t: "走动时大脑会分泌特定脑电波，刺激海马体，有助记忆", ok: true },
+        { t: "走路会分散注意力，背东西效率低",                   ok: false },
+        { t: "只有坐着不动才能记住东西",                         ok: false },
+        { t: "走路只对身体健康有用，和记忆无关",                 ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他讲「长期熬夜」时，强调熬夜真正损害的是？",
+      opts: [
+        { t: "不是消耗意志力，而是在透支前额叶功能", ok: true },
+        { t: "只是伤肝，和大脑无关",                 ok: false },
+        { t: "只影响第二天的精神",                   ok: false },
+        { t: "熬夜反而能锻炼大脑",                   ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他对「ADHD、前额叶受损」这类网络自我诊断的态度是？",
+      opts: [
+        { t: "提醒别随便对号入座，临床真实损伤和网络标签是两回事", ok: true },
+        { t: "鼓励大家都去测一测自己是不是ADHD",                   ok: false },
+        { t: "认为这些根本不存在",                                 ok: false },
+        { t: "觉得年轻人都在装病",                                 ok: false },
+      ]
+    },
+    {
+      multi: false, w: 7,
+      q: "他那期「考前饮食」的核心建议是：考前避免吃什么？",
+      opts: [
+        { t: "高糖碳水（会让大脑犯困、影响发挥）", ok: true },
+        { t: "黑咖啡，会过度兴奋",                 ok: false },
+        { t: "鸡蛋，蛋白质太多消化慢",             ok: false },
+        { t: "坚果，油脂影响思考",                 ok: false },
+      ]
+    },
+    {
+      multi: true, w: 16,
+      q: "下面哪些，是他讲过的「记忆方法」？",
+      hint: "多选 · 全部选对才得分",
+      opts: [
+        { t: "海马体睡前记忆法",     ok: true  },
+        { t: "饥饿学习法",           ok: true  },
+        { t: "音乐唤醒法",           ok: true  },
+        { t: "感恩复盘",             ok: true  },
+        { t: "量子速读记忆法",       ok: false },
+        { t: "靠吃保健品硬补",       ok: false },
+      ]
+    },
+  ],
+
+  // —— B区：心理测试题（共6题）—— 不分对错，看你的关注点倾向哪边
+  psych: [
+    {
+      q: "点开西蒙斯的视频，你最期待看到的是？",
+      opts: [
+        { t: "这期能学到什么改变自己的脑科学方法", type: "study" },
+        { t: "他今天什么造型、状态怎么样",         type: "face" },
+        { t: "他有没有透露感情状态、生活日常",     type: "lover" },
+        { t: "他到底在哪个城市、每天在干嘛",       type: "stalker" },
+      ]
+    },
+    {
+      q: "如果能加到他微信，你第一件事会？",
+      opts: [
+        { t: "请教一个一直想问的脑科学/学习问题", type: "study" },
+        { t: "夸他好看、想要他的自拍",           type: "face" },
+        { t: "找他聊天，想和他发展成更近的关系", type: "lover" },
+        { t: "翻遍他朋友圈，了解他所有生活细节", type: "stalker" },
+      ]
+    },
+    {
+      q: "你最想进这个群的原因是？",
+      opts: [
+        { t: "和同样想改变自己的人一起学脑科学",   type: "study" },
+        { t: "群里能更多看到他、近距离欣赏",       type: "face" },
+        { t: "有机会和他本人有更多私人互动",       type: "lover" },
+        { t: "能打听到更多关于他的信息",           type: "stalker" },
+      ]
+    },
+    {
+      q: "如果有一天他公开恋爱了，你的反应是？",
+      opts: [
+        { t: "没啥感觉，照样看视频学知识",         type: "study" },
+        { t: "有点失落，但看看脸也就算了",         type: "face" },
+        { t: "嫉妒、难过，甚至不想再看他的内容",   type: "lover" },
+        { t: "立刻想知道对方是谁、扒出各种细节",   type: "stalker" },
+      ]
+    },
+    {
+      q: "你手机里保存最多的，是他的？",
+      opts: [
+        { t: "干货笔记、知识点截图、方法清单",     type: "study" },
+        { t: "他的正脸照、好看的视频封面",         type: "face" },
+        { t: "他的生活照，甚至自己脑补的内容",     type: "lover" },
+        { t: "各种能拼出他私人信息的动态截图",     type: "stalker" },
+      ]
+    },
+    {
+      q: "刷到一条他没露脸、只讲纯干货的视频，你会？",
+      opts: [
+        { t: "太好了，这种最该看，认真做笔记",           type: "study" },
+        { t: "没露脸有点失望，快速划走",                 type: "face" },
+        { t: "不太关心内容，想看他平时长啥样",           type: "lover" },
+        { t: "翻评论区/主页，想扒出他更多个人动态",     type: "stalker" },
+      ]
+    },
+    {
+      q: "看完一期很有用的视频，你最可能做的事是？",
+      opts: [
+        { t: "整理成笔记，找机会用起来",                 type: "study" },
+        { t: "顺手点赞收藏，存着慢慢看",                 type: "face" },
+        { t: "去评论区留个言，希望能被翻牌",             type: "lover" },
+        { t: "去他主页翻翻，看他最近发了啥",             type: "stalker" },
+      ]
+    },
+    {
+      q: "群里有小伙伴分享了一个自己的改变故事，你会？",
+      opts: [
+        { t: "认真看，问问方法细节",                     type: "study" },
+        { t: "凑个热闹，点赞支持下",                     type: "face" },
+        { t: "更在意博主会不会回复",                     type: "lover" },
+        { t: "好奇这人是谁、长什么样",                   type: "stalker" },
+      ]
+    },
+    {
+      q: "如果博主开了个「连麦答疑」，你更想？",
+      opts: [
+        { t: "带着真问题去请教",                         type: "study" },
+        { t: "听他说说话，看他状态就好",                 type: "face" },
+        { t: "争取被他点到、被记住",                     type: "lover" },
+        { t: "趁机看看他的房间/背景细节",                type: "stalker" },
+      ]
+    },
+    {
+      q: "下面哪句最接近你的心里话？",
+      opts: [
+        { t: "我想真的学会点东西、改变自己",             type: "study" },
+        { t: "我就是喜欢看他这个人",                     type: "face" },
+        { t: "要是能离他更近一点就好了",                 type: "lover" },
+        { t: "我挺想搞清楚他到底是怎样一个人",           type: "stalker" },
+      ]
+    },
+  ],
+
+  // —— C区：隐晦侧面题（6题）—— 题目像日常用户调研，选项暗中对应粉丝类型
+  // 每个选项都包装得"很正常"，让人不设防地暴露真实倾向
+  covert: [
+    {
+      q: "平时刷短视频，哪种会让你不自觉多停留几秒？",
+      opts: [
+        { t: "讲得有逻辑、能让人变聪明的",            type: "study" },
+        { t: "画面舒服、看着赏心悦目",                type: "face" },
+        { t: "有代入感、让人想一直追下去",            type: "lover" },
+        { t: "有点幕后真实感、能满足好奇心的",        type: "stalker" },
+      ]
+    },
+    {
+      q: "如果让你给这个群定个调子，你最想要的是？",
+      opts: [
+        { t: "每周一个脑科学主题，一起实践打卡",      type: "study" },
+        { t: "轻松点，能多看到博主的动态",            type: "face" },
+        { t: "像朋友小圈子，偶尔有点小互动",          type: "lover" },
+        { t: "人少真诚，能更深入地了解彼此",          type: "stalker" },
+      ]
+    },
+    {
+      q: "你愿意把精力主要花在？",
+      opts: [
+        { t: "做笔记、实践方法、复盘自己的变化",      type: "study" },
+        { t: "收藏喜欢的内容、持续追更",              type: "face" },
+        { t: "想办法让自己被注意到",                  type: "lover" },
+        { t: "挖掘更多没公开的信息",                  type: "stalker" },
+      ]
+    },
+    {
+      q: "你在评论区，最常做的事是？",
+      opts: [
+        { t: "分享实践感受、或者提问",                type: "study" },
+        { t: "夸一夸、表达喜欢",                      type: "face" },
+        { t: "试着和他产生点对话",                    type: "lover" },
+        { t: "打听一些关于他的事",                    type: "stalker" },
+      ]
+    },
+    {
+      q: "关于博主露不露脸，你的真实想法是？",
+      opts: [
+        { t: "无所谓，内容和逻辑最重要",              type: "study" },
+        { t: "当然希望多露脸，看着舒服",              type: "face" },
+        { t: "露脸会感觉更亲近一点",                  type: "lover" },
+        { t: "露脸能看到他真实的样子和环境",          type: "stalker" },
+      ]
+    },
+    {
+      q: "假设有一天博主停更了，你会？",
+      opts: [
+        { t: "把学到的方法继续用下去",                type: "study" },
+        { t: "挺可惜，少了个好看的人看",              type: "face" },
+        { t: "失落，像失去某种寄托",                  type: "lover" },
+        { t: "想知道他去做什么了、还能找到他吗",      type: "stalker" },
+      ]
+    },
+    {
+      q: "你心目中「关注一个博主」最好的状态是？",
+      opts: [
+        { t: "安静地学东西，默默变好",                type: "study" },
+        { t: "追更的过程本身就很享受",                type: "face" },
+        { t: "能感觉到一点点双向的连接",              type: "lover" },
+        { t: "了解得越多越有安全感",                  type: "stalker" },
+      ]
+    },
+    {
+      q: "你最受不了群里出现哪种情况？",
+      opts: [
+        { t: "没人认真聊方法，全是闲聊",              type: "study" },
+        { t: "气氛太冷清，没什么内容可看",            type: "face" },
+        { t: "一点互动和反馈都没有",                  type: "lover" },
+        { t: "什么都聊，却聊不到他本人",              type: "stalker" },
+      ]
+    },
+    {
+      q: "如果让你介绍自己进群，你会先说？",
+      opts: [
+        { t: "最近在学/想改变什么",                   type: "study" },
+        { t: "关注很久了，很喜欢",                    type: "face" },
+        { t: "希望能和大家、和博主多交流",            type: "lover" },
+        { t: "想先多了解了解大家",                    type: "stalker" },
+      ]
+    },
+    {
+      q: "下面哪种内容，你更愿意花时间？",
+      opts: [
+        { t: "一个能立刻用上的方法拆解",              type: "study" },
+        { t: "一段看着舒服的日常碎片",                type: "face" },
+        { t: "一些让人觉得被理解的话",                type: "lover" },
+        { t: "一些不太容易找到的细节",                type: "stalker" },
+      ]
+    },
+  ]
+};
+
+/* ============================================================
+   判定与计分逻辑（一般不用改）
+   ============================================================ */
+const PASS_SCORE = 70;          // 暗题满分100，≥70 视为"真看过视频"
+const TYPE_LABEL = {
+  study:   "学习型真粉",
+  face:    "颜值欣赏型",
+  lover:   "情感投射型",
+  stalker: "隐私好奇型"
+};
+
+let cur = 0;                    // 当前题号
+let ALL = [];                   // 本次测试的题目序列（每次开始都会重新随机生成）
+let answers = [];               // 用户每题选中的【选项对象】（不是下标，因为顺序会打乱）
+
+// ====== 随机化核心：洗牌 + 抽题 ======
+// 每个区从这里抽多少题（总和 = 显示给粉丝的题数）
+const DRAW = { know: 8, psych: 6, covert: 6 };   // 共 20 题
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// 生成一次随机测试：抽题 + 选项打乱 + 整体洗牌
+function buildQuiz(){
+  const pick = (bank, kind, n) => shuffle(bank).slice(0,n).map(q=>{
+    // 选项也打乱顺序（关键防串供点：每题"正确答案"位置都不同）
+    return { ...q, kind, opts: shuffle(q.opts) };
+  });
+  let list = [
+    ...pick(QUIZ.knowledge,'know',DRAW.know),
+    ...pick(QUIZ.psych,'psych',DRAW.psych),
+    ...pick(QUIZ.covert,'covert',DRAW.covert),
+  ];
+  list = shuffle(list);   // 整体顺序也打乱：知识题/心理题/隐晦题混排
+  return list;
+}
+
+function startQuiz(){
+  ALL = buildQuiz();                  // ⭐ 每次开始都重新随机生成
+  cur = 0; answers = new Array(ALL.length).fill(null);
+  show('screen-quiz');
+  renderQ();
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderQ(){
+  const c = document.getElementById('qContainer');
+  const q = ALL[cur];
+  const total = ALL.length;
+  document.getElementById('bar').style.width = (cur/total*100)+'%';
+
+  const isMulti = q.multi;
+  const tagClass = q.kind==='know' ? 'know' : (q.kind==='psych' ? 'psych' : 'covert');
+  const tagText  = q.kind==='know' ? '🧪 真粉验证' : (q.kind==='psych' ? '💫 心理测试' : '🔮 小调研');
+  const sel = answers[cur] || [];
+
+  let optsHtml = q.opts.map((o,i)=>{
+    // ⭐ 用选项的引用地址判断是否选中，而不是固定下标（顺序打乱也能正确高亮）
+    const checked = sel.includes(o) ? 'sel' : '';
+    const radio = isMulti ? '' : 'radio';
+    return `<div class="opt ${radio} ${checked}" onclick="pick(${i})">
+      <div class="box"></div><div class="txt">${o.t}</div></div>`;
+  }).join('');
+
+  c.innerHTML = `
+    <div class="card">
+      <div class="q-tag ${tagClass}">${tagText}</div>
+      <div class="q-idx">第 ${cur+1} / ${total} 题</div>
+      <div class="q-text">${q.q}</div>
+      ${q.hint?`<div class="q-hint">${q.hint}</div>`:''}
+      <div class="opts">${optsHtml}</div>
+    </div>`;
+
+  const nb = document.getElementById('nextBtn');
+  nb.textContent = (cur===total-1) ? '查看我的结果 ✨' : '下一题 →';
+  nb.disabled = sel.length===0;
+  document.getElementById('prevBtn').style.visibility = cur===0 ? 'hidden':'visible';
+}
+
+function pick(i){
+  const q = ALL[cur];
+  const optObj = q.opts[i];            // 直接拿选项对象
+  let sel = answers[cur] ? [...answers[cur]] : [];
+  if(q.multi){
+    sel.includes(optObj) ? sel = sel.filter(x=>x!==optObj) : sel.push(optObj);
+  } else {
+    sel = [optObj];
+  }
+  answers[cur] = sel;
+  renderQ();
+}
+
+function prevQ(){ if(cur>0){cur--; renderQ();} }
+
+function nextQ(){
+  if(!answers[cur] || answers[cur].length===0) return;
+  if(cur < ALL.length-1){ cur++; renderQ(); }
+  else { finish(); }
+}
+
+/* —— 计分（基于本次动态题目序列 ALL + 选项对象 answers）—— */
+function calc(){
+  let kScore = 0, kMax = 0;
+
+  // 1) 暗题：遍历本次抽到的 know 题，按选项对象上的 ok 标志判定
+  ALL.forEach((q,idx)=>{
+    if(q.kind !== 'know') return;
+    kMax += q.w || 0;
+    const ai = answers[idx];
+    if(!ai || ai.length===0) return;
+    if(q.multi){
+      // 多选：用户选中的项 ok 全为 true，且没有漏选任何一个 ok 项
+      const userPickedAllOk = q.opts.filter(o=>o.ok).every(o=>ai.includes(o));
+      const userPickedNoWrong = ai.every(o=>o.ok);
+      if(userPickedAllOk && userPickedNoWrong) kScore += (q.w || 0);
+    } else {
+      // 单选：选中的那个选项 ok 为 true 即得分
+      if(ai[0].ok) kScore += (q.w || 0);
+    }
+  });
+  // 归一化成百分制（即使抽到的题不同，分数始终是 0~100）
+  kScore = kMax ? Math.round(kScore / kMax * 100) : 0;
+
+  // 2) 心理题 + 隐晦题：按选中选项对象上的 type 统计倾向
+  const typeCount = {study:0,face:0,lover:0,stalker:0};
+  ALL.forEach((q,idx)=>{
+    if(q.kind !== 'psych' && q.kind !== 'covert') return;
+    const ai = answers[idx];
+    if(!ai || ai.length===0) return;
+    const t = ai[0].type;
+    if(t) typeCount[t]++;
+  });
+  const maxType = Object.keys(typeCount).reduce((a,b)=>typeCount[a]>=typeCount[b]?a:b);
+
+  return { kScore, typeCount, maxType };
+}
+
+function finish(){
+  document.getElementById('bar').style.width = '100%';
+  const {kScore, typeCount, maxType} = calc();
+  const knowPass = kScore >= PASS_SCORE;
+  const isStudy = maxType === 'study';
+  const PASS = knowPass && isStudy;   // 双重闸门
+
+  const box = document.getElementById('resultBox');
+  const code = 'XMS-'+ (PASS?'PASS':'CHK') +'-'+ Math.random().toString(36).slice(2,7).toUpperCase();
+
+  // 结果头部 + 各维度
+  let html = `
+    <div class="emoji">${PASS?'🎉':(knowPass?'🌱':'🌱')}</div>
+    <h2>${PASS?'太好了，找到同频的你啦！':'谢谢你做完～'}</h2>
+    <div class="sub">${PASS?'扫码进群，一起把脑科学用起来':'看看这次的结果 👇'}</div>
+
+    <div class="panel">
+      <h3>🧪 真粉验证分</h3>
+      <div class="scoreline"><span>视频观看/学习程度</span><span><b style="color:var(--brand)">${kScore}</b> / 100</span></div>
+      <div class="bar"><i style="width:${kScore}%;background:${knowPass?'var(--ok)':'var(--warn)'}"></i></div>
+
+      <h3>💫 关注倾向分布</h3>
+      ${renderTypeBars(typeCount)}
+
+      <div class="verdict ${PASS?'pass':'fail'}">
+        ${PASS
+          ? '✅ <b>判定：学习型真粉</b><br>你确实认真看过视频、是来学习脑科学改变自己的。这正是这个群要找的人。'
+          : verdictText(knowPass, maxType)}
+      </div>
+    </div>
+  `;
+
+  if(PASS){
+    html += `
+      <div class="panel qr-area">
+        <h3 style="justify-content:center">🎉 学习群入口在这里</h3>
+        <div class="qr" id="qrBox">
+          <img src="qun.jpg" alt="学习群入口二维码" onerror="this.parentNode.innerHTML='📥 当前入口正在更新，请稍后再试'">
+        </div>
+        <div class="qr-tip">扫码后请备注下面的小暗号，方便进群核验。</div>
+        <div class="copycode">
+          <input id="codeVal" readonly value="${code}">
+          <button onclick="copyCode(this)">复制暗号</button>
+        </div>
+        <div class="qr-tip">入口会定期更新；如果过期，请重新进入测试页查看最新入口。</div>
+      </div>
+    `;
+  } else {
+    html += `
+      <div class="panel">
+        <h3>🌱 期待下次的相遇</h3>
+        <div class="verdict pass" style="background:#eef3ff;color:#2b5ccf;border-left-color:var(--brand)">
+          这个微信群主要是一起<b>聊脑科学、实践成长</b>的小天地，目前好像还不是最适合你的频道～ 没关系，欢迎你先多看看视频、慢慢用起来。等哪天你觉得"我好像也挺想和大家一起学的"，随时回来，这里一直给你留着位置 🌿
+        </div>
+      </div>
+    `;
+  }
+
+  html += `<div class="foot">© 疯狂的西蒙斯 · 脑科学成长群<br>一个小小的互动，只为把同频的你聚在一起 🌿</div>`;
+  box.innerHTML = html;
+  show('screen-result');
+}
+
+function renderTypeBars(tc){
+  const total = Object.values(tc).reduce((a,b)=>a+b,0) || 1;
+  const colors = {study:'#15b8a6',face:'#ffb84d',lover:'#ff6fa5',stalker:'#9b6bff'};
+  const labels = {study:'📚 学习型',face:'✨ 颜值型',lover:'💕 情感型',stalker:'🔍 隐私型'};
+  return Object.keys(tc).map(k=>{
+    const pct = Math.round(tc[k]/total*100);
+    return `<div class="scoreline"><span>${labels[k]}</span><span>${tc[k]}题 · ${pct}%</span></div>
+      <div class="bar"><i style="width:${pct}%;background:${colors[k]}"></i></div>`;
+  }).join('');
+}
+
+function verdictText(knowPass, maxType){
+  const tip = {
+    face:    "你更多是被内容和氛围里的那份「好看」吸引的，这也是一种喜欢的方式～不过这个小群更偏<b>一起聊干货、实践成长</b>，可能不是你最舒服的频道，先看看视频、慢慢了解也挺好。",
+    lover:   "你好像挺期待和博主之间能有更多情感上的连接，这种心情很正常～只是这个微信群是个<b>聊脑科学</b>的小天地，给不了太多情感互动，希望你别失望 🌿",
+    stalker: "你对博主本人挺好奇的，好奇心本身没有错～不过这个群更想守住一点边界感，<b>只聊学习、不聊私生活</b>，我们互相留点距离，相处更舒服。",
+    study:   "你的心思确实放在「学东西」上，这点很难得～只是在「看过多少视频」这一项上还差一点点，多刷几期、真的用起来，下次一定更聊得来！"
+  };
+  if(!knowPass && maxType==='study'){
+    return "🌱 <b>差一点点，下次再来～</b><br>" + tip.study;
+  }
+  const head = {
+    face:"✨ 看起来你更偏「欣赏派」",lover:"💕 看起来你更偏「情感派」",stalker:"🔍 看起来你更偏「好奇派」",study:"🌱 看起来你更偏「学习派」"
+  };
+  return head[maxType] + "<br>" + tip[maxType];
+}
+
+function copyCode(btn){
+  const v = document.getElementById('codeVal');
+  const text = v.value;
+  const markDone = () => {
+    if(!btn) return;
+    const old = btn.dataset.label || btn.textContent;
+    btn.dataset.label = old;
+    btn.textContent = '已复制 ✓';
+    setTimeout(()=>btn.textContent=old,1500);
+  };
+  const fallbackCopy = () => {
+    v.select();
+    v.setSelectionRange(0, text.length);
+    try{
+      document.execCommand('copy');
+      markDone();
+    }catch(e){}
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(markDone).catch(fallbackCopy);
+  }else{
+    fallbackCopy();
+  }
+}
+</script>
+</body>
+</html>
