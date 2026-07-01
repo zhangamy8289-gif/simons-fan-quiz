@@ -496,6 +496,7 @@ let answers = [];               // 用户每题选中的【选项对象】（不
 // ====== 随机化核心：洗牌 + 抽题 ======
 // 每个区从这里抽多少题（总和 = 显示给粉丝的题数）
 const DRAW = { know: 8, psych: 6, covert: 6 };   // 共 20 题
+const ATTEMPT_KEY = 'xms_fan_quiz_attempt_v1';   // 同一浏览器提交后锁定，减少反复刷题
 
 function shuffle(arr){
   const a = [...arr];
@@ -522,10 +523,35 @@ function buildQuiz(){
 }
 
 function startQuiz(){
+  const oldAttempt = getAttemptRecord();
+  if(oldAttempt){
+    renderCompletedAttempt(oldAttempt);
+    return;
+  }
   ALL = buildQuiz();                  // ⭐ 每次开始都重新随机生成
   cur = 0; answers = new Array(ALL.length).fill(null);
   show('screen-quiz');
   renderQ();
+}
+
+function getAttemptRecord(){
+  try{
+    const raw = localStorage.getItem(ATTEMPT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){
+    return null;
+  }
+}
+
+function saveAttemptRecord(record){
+  try{
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify(record));
+  }catch(e){}
+}
+
+function initAttemptGate(){
+  const oldAttempt = getAttemptRecord();
+  if(oldAttempt) renderCompletedAttempt(oldAttempt);
 }
 
 function show(id){
@@ -635,6 +661,14 @@ function finish(){
 
   const box = document.getElementById('resultBox');
   const code = 'XMS-'+ (PASS?'PASS':'CHK') +'-'+ Math.random().toString(36).slice(2,7).toUpperCase();
+  saveAttemptRecord({
+    pass: PASS,
+    code,
+    kScore,
+    typeCount,
+    maxType,
+    createdAt: new Date().toISOString()
+  });
 
   // 结果头部 + 各维度
   let html = `
@@ -680,6 +714,57 @@ function finish(){
         <div class="verdict pass" style="background:#eef3ff;color:#2b5ccf;border-left-color:var(--brand)">
           这个微信群主要是一起<b>聊脑科学、实践成长</b>的小天地，目前好像还不是最适合你的频道～ 没关系，欢迎你先多看看视频、慢慢用起来。等哪天你觉得"我好像也挺想和大家一起学的"，随时回来，这里一直给你留着位置 🌿
         </div>
+      </div>
+    `;
+  }
+
+  html += `<div class="foot">© 疯狂的西蒙斯 · 脑科学成长群<br>一个小小的互动，只为把同频的你聚在一起 🌿</div>`;
+  box.innerHTML = html;
+  show('screen-result');
+}
+
+function renderCompletedAttempt(record){
+  document.getElementById('bar').style.width = '100%';
+  const box = document.getElementById('resultBox');
+  const kScore = Number(record.kScore || 0);
+  const typeCount = record.typeCount || {study:0,face:0,lover:0,stalker:0};
+  const maxType = record.maxType || 'study';
+  const code = record.code || 'XMS-DONE';
+  const doneText = record.createdAt ? new Date(record.createdAt).toLocaleString('zh-CN') : '之前';
+
+  let html = `
+    <div class="emoji">${record.pass?'🎉':'🌱'}</div>
+    <h2>你已经完成过本次测试啦</h2>
+    <div class="sub">为了减少反复刷题，同一设备/浏览器只保留一次测试结果</div>
+
+    <div class="panel">
+      <h3>📌 已记录的结果</h3>
+      <div class="scoreline"><span>完成时间</span><span>${doneText}</span></div>
+      <div class="scoreline"><span>视频观看/学习程度</span><span><b style="color:var(--brand)">${kScore}</b> / 100</span></div>
+      <div class="bar"><i style="width:${kScore}%;background:${record.pass?'var(--ok)':'var(--warn)'}"></i></div>
+      <h3>💫 关注倾向分布</h3>
+      ${renderTypeBars(typeCount)}
+      <div class="verdict ${record.pass?'pass':'fail'}">
+        ${record.pass
+          ? '✅ <b>已通过：学习型真粉</b><br>你可以继续使用首次生成的入口和暗号。'
+          : '🌱 <b>已完成：本轮暂未通过</b><br>为了避免刷题，本设备不能重复测试。欢迎你先多看看内容，之后等博主开放新一轮测试。'}
+      </div>
+    </div>
+  `;
+
+  if(record.pass){
+    html += `
+      <div class="panel qr-area">
+        <h3 style="justify-content:center">🎉 学习群入口在这里</h3>
+        <div class="qr" id="qrBox">
+          <img src="qun.jpg" alt="学习群入口二维码" onerror="this.parentNode.innerHTML='📥 当前入口正在更新，请稍后再试'">
+        </div>
+        <div class="qr-tip">扫码后请备注下面的小暗号，方便进群核验。</div>
+        <div class="copycode">
+          <input id="codeVal" readonly value="${code}">
+          <button onclick="copyCode(this)">复制暗号</button>
+        </div>
+        <div class="qr-tip">你不需要重新测试；入口会定期更新。</div>
       </div>
     `;
   }
@@ -740,6 +825,8 @@ function copyCode(btn){
     fallbackCopy();
   }
 }
+
+initAttemptGate();
 </script>
 </body>
 </html>
